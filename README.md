@@ -10,24 +10,93 @@ HOI-DETR is a transformer-based framework for detecting hands, hand-held objects
 
 ## Highlights
 
-- **State-of-the-art HOI detection** across four diverse benchmarks: Hands23, HOIST, FineBio, and HD-EPIC-HOI
-- **+20 mAP points** improvement over the previous state of the art on Hands23 and FineBio
-- **Interaction module** that predicts hand → 1st object and 1st object → 2nd object relations from decoder token pairs
-- **New video benchmark** HD-EPIC-HOI with spatiotemporal consistency metrics (ST-STC, LTC)
+- **+20 mAP₅₀** improvement over Hands23 on both Hands23 and FineBio benchmarks
+- **Interaction module** predicting hand → 1st object and 1st object → 2nd object relations from decoder token pairs
 - **Refined Hands23 annotations** correcting duplicate bounding boxes across 26k images
+- **Strong zero-shot generalisation** to unseen datasets and domains
+
+---
+
+## Installation
+
+This codebase is adopted from [Co-DETR](https://github.com/Sense-X/Co-DETR), built on MMDetection V2.25.3 and MMCV V1.5.0. The source code of MMDetection is included in this repo. We have tested on two systems:
+
+| System | Python | PyTorch | CUDA | GPU |
+|--------|--------|---------|------|-----|
+| x86 (standard) | 3.7 | 1.11.0+cu113 | 12.2 (driver) | RTX 4090 |
+| aarch64 HPC | 3.10 | 2.4.1 (cu120) | 12.0 | GH200 Hopper |
+
+For most users, follow the **x86 setup** below. If you are on an ARM64 HPC cluster (e.g. Isambard-AI with Hopper GPUs), or cannot install PyTorch 1.11, see [INSTALL_HOPPER.md](INSTALL_HOPPER.md).
+
+### x86 — Standard NVIDIA GPU
+
+<details>
+<summary>Tested on Ubuntu 24.04, RTX 4090, CUDA Driver 12.2, Python 3.7</summary>
+
+**1. Create conda environment**
+
+```bash
+conda create -n codetr python=3.7 -y
+conda activate codetr
+```
+
+**2. Install PyTorch**
+
+```bash
+pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0+cu113 \
+  --extra-index-url https://download.pytorch.org/whl/cu113
+```
+
+> CUDA 11.3 wheels work with CUDA 12.x drivers due to NVIDIA's backward compatibility guarantee.
+
+**3. Install mmcv**
+
+```bash
+pip install mmcv-full==1.5.0 \
+  -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.11/index.html
+```
+
+**4. Clone and install Co-DETR**
+
+```bash
+git clone https://github.com/your-org/Co-DETR.git
+cd Co-DETR
+pip install -e .
+```
+
+**5. Install remaining dependencies**
+
+```bash
+pip install timm==0.6.13 fairscale==0.4.6 scipy==1.7.3 yapf==0.40.1 \
+  opencv-python numpy==1.21.6 pycocotools
+```
+
+**6. Verify**
+
+```bash
+python -c "import torch, mmcv; print(torch.__version__, mmcv.__version__)"
+# Expected: 1.11.0+cu113  1.5.0
+```
+
+</details>
+
+For the ARM64 / Hopper setup, see [INSTALL_HOPPER.md](INSTALL_HOPPER.md).
 
 ---
 
 ## Demo
 
-Edit the paths and settings at the top of `demo/demo.py`, then run:
+### 1. Download checkpoint
 
 ```bash
-export PYTHONPATH=".:$PYTHONPATH"
-python demo/demo.py
+mkdir -p checkpoints
+wget -O checkpoints/epoch_5.pth \
+  https://huggingface.co/ahmaddarkhalil/hoi-detr/resolve/main/epoch_5.pth
 ```
 
-Key settings in `demo/demo.py`:
+### 2. Run
+
+Edit the paths and settings at the top of `demo/demo.py`:
 
 ```python
 MODEL_CONFIG = 'projects/configs/co_dino_vit/co_dino_5scale_vit_large_coco_with_relation_only_all_losses_custom.py'
@@ -39,11 +108,70 @@ SCORE_THR    = 0.3
 VERBOSE_LABELS = False
 ```
 
+Then run:
+
+```bash
+export PYTHONPATH=".:$PYTHONPATH"
+python demo/demo.py
+```
+
 Results are saved to `demo/results/<input_dir_name>/` by default, preserving original filenames.
 
 ---
 
+## Datasets
+
+Evaluation uses the refined version of [Hands23](https://github.com/ddshan/hands23_data). Download the images and splits from the Hands23 repo, then add our corrected annotation file.
+
+Expected directory structure:
+
+```
+hands23_data/
+├── annotations/
+│   └── val_h_first_second_full_corrected_w_area.json   ← provided in this repo
+├── allMergedSplit/
+│   ├── TEST.txt
+│   ├── TRAIN.txt
+│   └── VAL.txt
+├── allMergedBlur/
+│   └── *.jpg
+└── allMergedTxt/
+    └── *.jpg.txt
+```
+
+Images and splits are unchanged from Hands23 and can be downloaded directly from their repository. The annotation file `val_h_first_second_full_corrected_w_area.json` is provided under `annotations/` in this repo.
+
+---
+
 ## Evaluation
+
+### 1. Set dataset path
+
+Open the config file:
+
+```
+projects/configs/co_dino_vit/co_dino_5scale_vit_large_coco_with_relation_only_all_losses_custom.py
+```
+
+Set `data_root` to your local Hands23 path and confirm the annotation and image paths match your directory structure:
+
+```python
+data_root = '/path/to/hands23_data/'
+
+data = dict(
+    ...
+    val=dict(
+        pipeline=test_pipeline,
+        ann_file=data_root + 'annotations/val_h_first_second_full_corrected_w_area.json',
+        img_prefix=data_root + 'allMergedBlur/'),
+    test=dict(
+        pipeline=test_pipeline,
+        ann_file=data_root + 'annotations/val_h_first_second_full_corrected_w_area.json',
+        img_prefix=data_root + 'allMergedBlur/')
+)
+```
+
+### 2. Run evaluation
 
 ```bash
 bash -c 'export PYTHONPATH=".:$PYTHONPATH" && \
@@ -57,79 +185,27 @@ bash -c 'export PYTHONPATH=".:$PYTHONPATH" && \
 
 ---
 
-## Checkpoints
-
-| Model | Backbone | Hands23 AP50 | Download |
-|-------|----------|-------------|----------|
-| HOI-DETR | ViT-L/16 | 86.1 | [epoch_5.pth](#) |
-
----
-
-## Installation
-
-We provide separate installation guides for two platforms:
-
-| Platform | Guide |
-|----------|-------|
-| Standard x86 GPU (RTX 3090/4090, A100) | [INSTALL.md](INSTALL.md) |
-| ARM64 HPC with Hopper GPUs (GH200, Isambard-AI) | [INSTALL_HOPPER.md](INSTALL_HOPPER.md) |
-
----
-
-## Model Overview
-
-HOI-DETR extends Co-DETR with three components:
-
-**Backbone and Encoder.** A ViT-L/16 backbone processes the input image into patch embeddings, which are refined by a 6-layer transformer encoder using multi-scale deformable attention.
-
-**Decoder.** A transformer decoder maps Q query tokens to detections across four role-based classes: `{hand, 1st object, 2nd object, background}`. Unlike semantic detection, labels depend on the object's role in the scene — a pan held in a hand is a 1st object; the same pan resting on a stove is background.
-
-**Interaction Module.** An MLP head operates on pairs of decoder token embeddings to predict binary interaction relationships. Only valid pairs are evaluated: `hand → 1st object` and `1st object → 2nd object`. The module is supervised at every decoder layer with a focal loss and trained end-to-end with the detector.
-
----
-
-## Datasets
-
-| Dataset | Images | Hand | 1st obj | 2nd obj |
-|---------|--------|------|---------|---------|
-| Hands23 (refined) | 24.6k | 39.8k | 2.5k | 2.5k |
-| HD-EPIC-HOI | 41.9k | — | 26k | — |
-| HOIST | 3.5k | — | 3.9k | — |
-| FineBio | 238 | 465 | 372 | — |
-
-**Refined Hands23.** We corrected duplicate object annotations arising from the hand-centric annotation pipeline in the original Hands23 dataset. Across 26.2k reviewed images, 56.2% required correction, yielding cleaner training targets and more reliable evaluation.
-
-**HD-EPIC-HOI.** A new video benchmark derived from HD-EPIC, consisting of 911 sequences (41.9k frames) centred around object contact events. Ground-truth masks are propagated with SAM2. Two spatiotemporal metrics are introduced: Short-Term Spatio-Temporal Consistency (ST-STC) and Long-Term Consistency (LTC).
-
----
-
 ## Results
 
-**Hands23 (val)**
+**Hands23 val (refined annotations)**
 
-| Method | Hand AP50 | 1st obj AP50 | 2nd obj AP50 | F1 inter |
+| Method | Hand AP₅₀ | 1st obj AP₅₀ | 2nd obj AP₅₀ | F1 inter |
 |--------|-----------|-------------|-------------|----------|
 | Hands23 | 85.2 | 59.4 | 46.2 | 90.7 |
 | HOI-DETR (ours) | **93.1** | **86.5** | **78.7** | **95.5** |
 
-**Cross-dataset (zero-shot)**
+**Zero-shot cross-dataset**
 
 | Method | HOIST | HD-EPIC-HOI | FineBio (1st obj) |
 |--------|-------|-------------|-------------------|
 | Hands23 | 43.1 | 42.4 | 26.0 |
-| HOIST | 70.7 | 28.4 | — |
+| [HOIST](https://github.com/SupreethN/HOISTFormer) | 70.7 | 28.4 | — |
 | HOI-DETR (ours) | **76.6** | **67.6** | **55.8** |
 
-**Spatiotemporal consistency (HD-EPIC-HOI)**
-
-| Method | ST-STC | LTC |
-|--------|--------|-----|
-| Hands23 | 91.9 | 37.2 |
-| HOIST | 92.4 | 32.4 |
-| HOI-DETR (ours) | **95.4** | **61.9** |
+Evaluation datasets: [Hands23](https://github.com/ddshan/hands23_data) · [HOIST](https://github.com/SupreethN/HOISTFormer) · [FineBio](https://github.com/aistairc/FineBio)
 
 ---
 
 ## Acknowledgements
 
-This work builds on [Co-DETR](https://github.com/Sense-X/Co-DETR), [MMDetection](https://github.com/open-mmlab/mmdetection), and [Hands23](https://github.com/shan-it/Hands23). We thank the authors of HD-EPIC, HOIST, and FineBio for making their datasets available.
+This work builds on [Co-DETR](https://github.com/Sense-X/Co-DETR) and [MMDetection](https://github.com/open-mmlab/mmdetection). We thank the authors of Hands23, HOIST, FineBio, and HD-EPIC for making their datasets available. We also thank **Sidhartha Reddy Potu** for his contributions in the early stages of this project.
