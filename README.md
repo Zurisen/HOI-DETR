@@ -11,7 +11,7 @@ HOI-DETR is a transformer-based framework for detecting hands, hand-held objects
 ## Highlights
 
 - **+20 mAP₅₀** improvement over Hands23 on both Hands23 and FineBio benchmarks
-- **Interaction module** predicting hand → 1st object and 1st object → 2nd object relations from decoder token pairs
+- **Interaction module** predicting hand → 1st object and 1st object → 2nd object relations
 - **Refined Hands23 annotations** correcting duplicate bounding boxes across 26k images
 - **Strong zero-shot generalisation** to unseen datasets and domains
 
