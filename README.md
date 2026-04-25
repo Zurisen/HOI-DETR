@@ -190,14 +190,14 @@ bash -c 'export PYTHONPATH=".:$PYTHONPATH" && \
 
 | Method | Hand AP₅₀ | 1st obj AP₅₀ | 2nd obj AP₅₀ | F1 inter |
 |--------|-----------|-------------|-------------|----------|
-| Hands23 | 85.2 | 59.4 | 46.2 | 90.7 |
+| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 85.2 | 59.4 | 46.2 | 90.7 |
 | HOI-DETR (ours) | **93.1** | **86.5** | **78.7** | **95.5** |
 
 **Zero-shot cross-dataset**
 
 | Method | HOIST | HD-EPIC-HOI | FineBio (1st obj) |
 |--------|-------|-------------|-------------------|
-| Hands23 | 43.1 | 42.4 | 26.0 |
+| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 43.1 | 42.4 | 26.0 |
 | [HOIST](https://github.com/SupreethN/HOISTFormer) | 70.7 | 28.4 | — |
 | HOI-DETR (ours) | **76.6** | **67.6** | **55.8** |
 
