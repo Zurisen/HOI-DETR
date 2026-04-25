@@ -195,11 +195,11 @@ bash -c 'export PYTHONPATH=".:$PYTHONPATH" && \
 
 **Zero-shot cross-dataset**
 
-| Method | [HOIST](https://github.com/SupreethN/HOISTFormer) | HD-EPIC-HOI | [FineBio](https://github.com/aistairc/FineBio) (1st obj) |
+| Method | HD-EPIC-HOI | [HOIST](https://github.com/SupreethN/HOISTFormer)  | [FineBio](https://github.com/aistairc/FineBio) (1st obj) |
 |--------|-------|-------------|-------------------|
-| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 43.1 | 42.4 | 26.0 |
-| [HOIST](https://github.com/SupreethN/HOISTFormer) | 70.7 | 28.4 | — |
-| HOI-DETR (ours) | **76.6** | **67.6** | **55.8** |
+| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 42.4 | 43.1 | 26.0 |
+| [HOIST](https://github.com/SupreethN/HOISTFormer) | 28.4 | 70.7 | — |
+| HOI-DETR (ours) | **67.6** | **76.6**  | **55.8** |
 
 Evaluation datasets: [Hands23](https://github.com/ddshan/hands23_data) · [HOIST](https://github.com/SupreethN/HOISTFormer) · [FineBio](https://github.com/aistairc/FineBio)
 
