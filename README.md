@@ -59,7 +59,7 @@ pip install mmcv-full==1.5.0 \
 **4. Clone and install Co-DETR**
 
 ```bash
-git clone https://github.com/your-org/Co-DETR.git
+git clone https://github.com/AhmadDarKhalil/HOI-DETR.git
 cd Co-DETR
 pip install -e .
 ```
