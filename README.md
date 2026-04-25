@@ -11,7 +11,7 @@ HOI-DETR is a transformer-based framework for detecting hands, hand-held objects
 ## Highlights
 
 - **+20 mAP₅₀** improvement over Hands23 on both Hands23 and FineBio benchmarks
-- **Interaction module** predicting hand → 1st object and 1st object → 2nd object relations from decoder token pairs
+- **Interaction module** predicting hand → 1st object and 1st object → 2nd object relations
 - **Refined Hands23 annotations** correcting duplicate bounding boxes across 26k images
 - **Strong zero-shot generalisation** to unseen datasets and domains
 
@@ -26,8 +26,7 @@ This codebase is adopted from [Co-DETR](https://github.com/Sense-X/Co-DETR), bui
 | x86 (standard) | 3.7 | 1.11.0+cu113 | 12.2 (driver) | RTX 4090 |
 | aarch64 HPC | 3.10 | 2.4.1 (cu120) | 12.0 | GH200 Hopper |
 
-For most users, follow the **x86 setup** below. If you are on an ARM64 HPC cluster (e.g. Isambard-AI with Hopper GPUs), or cannot install PyTorch 1.11, see [INSTALL_HOPPER.md](INSTALL_HOPPER.md).
-
+Follow the **x86 setup** below if you are on a standard x86 machine. If you are on an ARM64 HPC cluster or your GPU does not support PyTorch 1.11 (SM 9.0 / Hopper and newer), see [INSTALL_HOPPER.md](INSTALL_HOPPER.md).
 ### x86 — Standard NVIDIA GPU
 
 <details>
@@ -59,7 +58,7 @@ pip install mmcv-full==1.5.0 \
 **4. Clone and install Co-DETR**
 
 ```bash
-git clone https://github.com/your-org/Co-DETR.git
+git clone https://github.com/AhmadDarKhalil/HOI-DETR.git
 cd Co-DETR
 pip install -e .
 ```
@@ -121,7 +120,7 @@ Results are saved to `demo/results/<input_dir_name>/` by default, preserving ori
 
 ## Datasets
 
-Evaluation uses the refined version of [Hands23](https://github.com/ddshan/hands23_data). Download the images and splits from the Hands23 repo, then add our corrected annotation file.
+Evaluation uses the refined version of [Hands23](https://github.com/ddshan/hands23_data). Download the images and splits from the Hands23 repo, then add our corrected annotation file (will be shared soon).
 
 Expected directory structure:
 
@@ -191,16 +190,16 @@ bash -c 'export PYTHONPATH=".:$PYTHONPATH" && \
 
 | Method | Hand AP₅₀ | 1st obj AP₅₀ | 2nd obj AP₅₀ | F1 inter |
 |--------|-----------|-------------|-------------|----------|
-| Hands23 | 85.2 | 59.4 | 46.2 | 90.7 |
+| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 85.2 | 59.4 | 46.2 | 90.7 |
 | HOI-DETR (ours) | **93.1** | **86.5** | **78.7** | **95.5** |
 
 **Zero-shot cross-dataset**
 
-| Method | HOIST | HD-EPIC-HOI | FineBio (1st obj) |
+| Method | HD-EPIC-HOI | [HOIST](https://github.com/SupreethN/HOISTFormer)  | [FineBio](https://github.com/aistairc/FineBio) (1st obj) |
 |--------|-------|-------------|-------------------|
-| Hands23 | 43.1 | 42.4 | 26.0 |
-| [HOIST](https://github.com/SupreethN/HOISTFormer) | 70.7 | 28.4 | — |
-| HOI-DETR (ours) | **76.6** | **67.6** | **55.8** |
+| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 42.4 | 43.1 | 26.0 |
+| [HOIST](https://github.com/SupreethN/HOISTFormer) | 28.4 | 70.7 | — |
+| HOI-DETR (ours) | **67.6** | **76.6**  | **55.8** |
 
 Evaluation datasets: [Hands23](https://github.com/ddshan/hands23_data) · [HOIST](https://github.com/SupreethN/HOISTFormer) · [FineBio](https://github.com/aistairc/FineBio)
 
