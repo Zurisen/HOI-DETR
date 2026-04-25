@@ -195,7 +195,7 @@ bash -c 'export PYTHONPATH=".:$PYTHONPATH" && \
 
 **Zero-shot cross-dataset**
 
-| Method | HOIST | HD-EPIC-HOI | FineBio (1st obj) |
+| Method | [HOIST](https://github.com/SupreethN/HOISTFormer) | HD-EPIC-HOI | [FineBio](https://github.com/aistairc/FineBio) (1st obj) |
 |--------|-------|-------------|-------------------|
 | [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 43.1 | 42.4 | 26.0 |
 | [HOIST](https://github.com/SupreethN/HOISTFormer) | 70.7 | 28.4 | — |
