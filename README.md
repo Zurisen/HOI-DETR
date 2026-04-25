@@ -26,8 +26,7 @@ This codebase is adopted from [Co-DETR](https://github.com/Sense-X/Co-DETR), bui
 | x86 (standard) | 3.7 | 1.11.0+cu113 | 12.2 (driver) | RTX 4090 |
 | aarch64 HPC | 3.10 | 2.4.1 (cu120) | 12.0 | GH200 Hopper |
 
-For most users, follow the **x86 setup** below. If you are on an ARM64 HPC cluster (e.g. Isambard-AI with Hopper GPUs), or cannot install PyTorch 1.11, see [INSTALL_HOPPER.md](INSTALL_HOPPER.md).
-
+Follow the **x86 setup** below if you are on a standard x86 machine. If you are on an ARM64 HPC cluster or your GPU does not support PyTorch 1.11 (SM 9.0 / Hopper and newer), see [INSTALL_HOPPER.md](INSTALL_HOPPER.md).
 ### x86 — Standard NVIDIA GPU
 
 <details>
