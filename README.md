@@ -2,13 +2,13 @@
 
 > **Improving and Evaluating Hand-Object Interaction Detection**
 
-[![Project Page](https://img.shields.io/badge/Project-Page-blue)](https://ahmaddarkhalil.github.io/HOI-DETR/)
-[![🤗 Demo](https://img.shields.io/badge/🤗-Demo-yellow)](https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo)
-[![🤗 Checkpoint](https://img.shields.io/badge/🤗-Checkpoint-orange)](https://huggingface.co/ahmaddarkhalil/hoi-detr)
+<p align="left">
+<a href='https://ahmaddarkhalil.github.io/HOI-DETR/'><img src='https://img.shields.io/badge/Project-Page-blue'></a>
+<a href='https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-green'></a>
+<a href='https://huggingface.co/ahmaddarkhalil/hoi-detr'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Checkpoint-orange'></a>
+</p>
 
 HOI-DETR is a transformer-based framework for detecting hands, hand-held objects, and their interactions in images and video. Built on the [Co-DETR](https://github.com/Sense-X/Co-DETR) architecture, it adds a lightweight interaction module that jointly predicts all visible hands, 1st objects (objects in direct contact with a hand), and 2nd objects (objects acted upon through a tool), along with their pairwise interaction links — all in a single forward pass.
-
-🔗 **[Project Page](https://ahmaddarkhalil.github.io/HOI-DETR/)** &nbsp;|&nbsp; 🤗 **[Live Demo](https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo)** &nbsp;|&nbsp; 📦 **[Checkpoint](https://huggingface.co/ahmaddarkhalil/hoi-detr)**
 
 ![HOI-DETR method overview](assets/method.png)
 
@@ -20,8 +20,6 @@ HOI-DETR is a transformer-based framework for detecting hands, hand-held objects
 - **Interaction module** predicting hand → 1st object and 1st object → 2nd object relations
 - **Refined Hands23 annotations** correcting duplicate bounding boxes across 26k images
 - **Strong zero-shot generalisation** to unseen datasets and domains
-- **[Try it live](https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo)** — run HOI-DETR on your own images in the browser
-
 ---
 
 ## Installation
