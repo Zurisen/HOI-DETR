@@ -188,23 +188,33 @@ bash -c 'export PYTHONPATH=".:$PYTHONPATH" && \
 
 **Hands23 val (refined annotations)**
 
-| Method | Hand AP₅₀ | 1st obj AP₅₀ | 2nd obj AP₅₀ | F1 inter |
-|--------|-----------|-------------|-------------|----------|
-| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 85.2 | 59.4 | 46.2 | 90.7 |
-| HOI-DETR (ours) | **93.1** | **86.5** | **78.7** | **95.5** |
+| Method | Overall AP₅₀ | Hand AP₅₀ | 1st obj AP₅₀ | 2nd obj AP₅₀ | F1 inter |
+|--------|-------------|-----------|-------------|-------------|----------|
+| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 63.6 | 85.2 | 59.4 | 46.2 | 90.7 |
+| HOI-DETR (ours) | **86.1** | **93.1** | **86.5** | **78.7** | **95.5** |
 
-**Zero-shot cross-dataset**
+**HD-EPIC-HOI (zero-shot video, 1st obj)**
 
-| Method | HD-EPIC-HOI | [HOIST](https://github.com/SupreethN/HOISTFormer)  | [FineBio](https://github.com/aistairc/FineBio) (1st obj) |
-|--------|-------|-------------|-------------------|
-| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 42.4 | 43.1 | 26.0 |
-| [HOIST](https://github.com/SupreethN/HOISTFormer) | 28.4 | 70.7 | — |
-| HOI-DETR (ours) | **67.6** | **76.6**  | **55.8** |
+| Method | Frame-AP | Video-AP | LTC |
+|--------|----------|----------|-----|
+| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 46.9 | 26.8 | 31.4 |
+| [HOIST](https://github.com/SupreethN/HOISTFormer) | 30.4 | 16.1 | 27.2 |
+| HOI-DETR (ours) | **72.6** | **60.2** | **61.0** |
 
-Evaluation datasets: [Hands23](https://github.com/ddshan/hands23_data) · [HOIST](https://github.com/SupreethN/HOISTFormer) · [FineBio](https://github.com/aistairc/FineBio)
+**Zero-shot cross-dataset (1st obj AP₅₀)**
+
+| Method | [HOIST](https://github.com/SupreethN/HOISTFormer) | [FineBio](https://github.com/aistairc/FineBio) |
+|--------|-------|-------------------|
+| [Hands23](https://github.com/EvaCheng-cty/hands23_detector) | 43.1 | 26.0 |
+| [HOIST](https://github.com/SupreethN/HOISTFormer) | 70.7 | — |
+| HOI-DETR (ours) | **76.6** | **55.8** |
+
+Evaluation datasets: [Hands23](https://github.com/ddshan/hands23_data) · [HOIST](https://supreethn.github.io/research/hoistformer/index.html) · [FineBio](https://github.com/aistairc/FineBio) · [HD-EPIC](https://hd-epic.github.io/)
 
 ---
 
 ## Acknowledgements
 
-This work builds on [Co-DETR](https://github.com/Sense-X/Co-DETR) and [MMDetection](https://github.com/open-mmlab/mmdetection). We thank the authors of Hands23, HOIST, FineBio, and HD-EPIC for making their datasets available. We also thank **Sidhartha Reddy Potu** for his contributions in the early stages of this project.
+This work was supported by EPSRC Program Grant Visual AI (EP/T028572/1). A. Darkhalil was supported by the EPSRC Doctoral Training Program (DTP). We acknowledge the usage of GPU node hours granted as part of the AIRR Innovator project "5D Hand-Object Interaction Modelling from In-the-wild Videos" (Mar 2026 – Sep 2026), the AIRR Gateway project "HOI Foundational Model from Egocentric Data" (Dec 2025 – Mar 2026), and the Sovereign AI Unit call project "Gen Model in Ego-sensed World" (Aug – Nov 2025). D. Fouhey was supported by the National Science Foundation under Grant No. 2006619 and 2437330.
+
+We thank **Sidhartha Reddy Potu** for his contributions during the early stages of this project. This work builds on [Co-DETR](https://github.com/Sense-X/Co-DETR) and [MMDetection](https://github.com/open-mmlab/mmdetection), and we gratefully acknowledge their authors for open-sourcing the codebase and architecture. We also thank the authors of [Hands23](https://github.com/ddshan/hands23_data), [HOIST](https://supreethn.github.io/research/hoistformer/index.html), [FineBio](https://github.com/aistairc/FineBio), and [HD-EPIC](https://hd-epic.github.io/) for making their datasets publicly available.
