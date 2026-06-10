@@ -1,6 +1,4 @@
-# HOI-DETR: Hand-Object Interaction Detection Transformer
-
-> **Improving and Evaluating Hand-Object Interaction Detection**
+# Improving and Evaluating Hand-Object Interaction Detection
 
 <p align="left">
 <a href='https://ahmaddarkhalil.github.io/HOI-DETR/'><img src='https://img.shields.io/badge/Project-Page-blue'></a>
