@@ -5,7 +5,7 @@
 <p align="left">
 <a href='https://ahmaddarkhalil.github.io/HOI-DETR/'><img src='https://img.shields.io/badge/Project-Page-blue'></a>
 <a href='https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-green'></a>
-<a href='https://huggingface.co/ahmaddarkhalil/hoi-detr'><img src='https://img.shields.io/badge/Checkpoint-Download-orange'></a>
+<a href='[https://huggingface.co/ahmaddarkhalil/hoi-detr](https://huggingface.co/ahmaddarkhalil/hoi-detr/blob/main/epoch_5.pth)'><img src='https://img.shields.io/badge/Checkpoint-Download-orange'></a>
 </p>
 
 HOI-DETR is a transformer-based framework for detecting hands, hand-held objects, and their interactions in images and video. Built on the [Co-DETR](https://github.com/Sense-X/Co-DETR) architecture, it adds a lightweight interaction module that jointly predicts all visible hands, 1st objects (objects in direct contact with a hand), and 2nd objects (objects acted upon through a tool), along with their pairwise interaction links — all in a single forward pass.
