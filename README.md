@@ -123,7 +123,7 @@ Results are saved to `demo/results/<input_dir_name>/` by default, preserving ori
 
 ## Datasets
 
-Evaluation uses the refined version of [Hands23](https://github.com/ddshan/hands23_data). Download the images and splits from the Hands23 repo, then add our corrected annotation file (will be shared soon).
+Evaluation uses the refined version of [Hands23](https://github.com/ddshan/hands23_data). Download the images and splits from the Hands23 repo, then add our [corrected annotation file](https://www.dropbox.com/scl/fo/5k2lc9krgtf5mzr7m6og2/AOaOSXRRrI9GyJwfO76QiIA?rlkey=n0y7wrybvey6ybvnfll7aqksl&st=yy2nb7zk&dl=0).
 
 Expected directory structure:
 
