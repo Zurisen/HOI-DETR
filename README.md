@@ -1,6 +1,7 @@
 # Improving and Evaluating Hand-Object Interaction Detection
 
 <p align="left">
+<a href='https://arxiv.org/abs/2606.17384'><img src='https://img.shields.io/badge/arXiv-2606.17384-b31b1b?logo=arxiv'></a>
 <a href='https://ahmaddarkhalil.github.io/HOI-DETR/'><img src='https://img.shields.io/badge/Project-Page-blue'></a>
 <a href='https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-green'></a>
 <a href='https://huggingface.co/ahmaddarkhalil/hoi-detr/blob/main/epoch_5.pth'><img src='https://img.shields.io/badge/Checkpoint-Download-orange'></a>
