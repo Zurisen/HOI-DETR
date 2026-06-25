@@ -1,10 +1,23 @@
-# Improving and Evaluating Hand-Object Interaction Detection
+<h1 align="center">
+  <img src="assets/logo_hoi_detr.png" alt="HOI-DETR logo" height="36" align="absmiddle">
+  &nbsp;Improving and Evaluating Hand-Object Interaction Detection
+</h1>
 
-<p align="left">
-<a href='https://arxiv.org/abs/2606.17384'><img src='https://img.shields.io/badge/arXiv-2606.17384-b31b1b?logo=arxiv'></a>
-<a href='https://ahmaddarkhalil.github.io/HOI-DETR/'><img src='https://img.shields.io/badge/Project-Page-blue'></a>
-<a href='https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-green'></a>
-<a href='https://huggingface.co/ahmaddarkhalil/hoi-detr/blob/main/epoch_5.pth'><img src='https://img.shields.io/badge/Checkpoint-Download-orange'></a>
+<p align="center">
+  <a href="https://ahmaddarkhalil.github.io/HOI-DETR/"><img src="https://img.shields.io/badge/Project_Page-green" alt="Project Page"></a>
+  <a href="https://arxiv.org/abs/2606.17384"><img src="https://img.shields.io/badge/arXiv-2606.17384-b31b1b" alt="arXiv"></a>
+  <a href="https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo"><img src="https://img.shields.io/badge/Demo-Hugging_Face-yellow" alt="Demo"></a>
+  <a href="https://huggingface.co/ahmaddarkhalil/hoi-detr"><img src="https://img.shields.io/badge/Checkpoint-Hugging_Face-yellow" alt="Checkpoint"></a>
+</p>
+
+<p align="center">
+  <a href="https://ahmaddarkhalil.github.io/">Ahmad Darkhalil</a><sup>1</sup>&nbsp;&nbsp;
+  <a href="https://dimadamen.github.io/">Dima Damen</a><sup>1</sup>&nbsp;&nbsp;
+  <a href="https://cs.nyu.edu/~fouhey/">David Fouhey</a><sup>2</sup>
+</p>
+
+<p align="center">
+  <b><sup>1</sup>University of Bristol</b>&nbsp;&nbsp;&nbsp;<b><sup>2</sup>New York University</b>
 </p>
 
 HOI-DETR is a transformer-based framework for detecting hands, hand-held objects, and their interactions in images and video. Built on the [Co-DETR](https://github.com/Sense-X/Co-DETR) architecture, it adds a lightweight interaction module that jointly predicts all visible hands, 1st objects (objects in direct contact with a hand), and 2nd objects (objects acted upon through a tool), along with their pairwise interaction links — all in a single forward pass.
@@ -215,6 +228,20 @@ bash -c 'export PYTHONPATH=".:$PYTHONPATH" && \
 
 Evaluation datasets: [Hands23](https://github.com/ddshan/hands23_data) · [HOIST](https://supreethn.github.io/research/hoistformer/index.html) · [FineBio](https://github.com/aistairc/FineBio) · [HD-EPIC](https://hd-epic.github.io/)
 
+---
+
+## Citation
+
+If you use HOI-DETR in your research, please cite:
+
+```bibtex
+@article{darkhalil2026improving,
+  title={Improving and Evaluating Hand-Object Interaction Detection},
+  author={Darkhalil, Ahmad and Damen, Dima and Fouhey, David},
+  journal={arXiv preprint arXiv:2606.17384},
+  year={2026}
+}
+```
 ---
 
 ## Acknowledgements
