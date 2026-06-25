@@ -5,8 +5,7 @@
 <p align="center">
   <a href="https://ahmaddarkhalil.github.io/HOI-DETR/"><img src="https://img.shields.io/badge/Project_Page-green?logo=github&logoColor=white" alt="Project Page"></a>
   <a href="https://arxiv.org/abs/2606.17384"><img src="https://img.shields.io/badge/arXiv-2606.17384-b31b1b?logo=arxiv&logoColor=white" alt="arXiv"></a>
-  <a href="https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo"><img src="https://img.shields.io/badge/Demo-Hugging_Face-yellow?logo=huggingface&logoColor=white" alt="Demo"></a>
-  <a href="https://huggingface.co/ahmaddarkhalil/hoi-detr"><img src="https://img.shields.io/badge/Checkpoint-Hugging_Face-yellow?logo=huggingface&logoColor=white" alt="Checkpoint"></a>
+  <a href="https://huggingface.co/spaces/ahmaddarkhalil/hoi-detr-demo"><img src="https://img.shields.io/badge/🤗_Demo-Hugging_Face-yellow" alt="Demo"></a>
 </p>
 
 <p align="center">
