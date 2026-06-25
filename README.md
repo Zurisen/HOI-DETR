@@ -1,6 +1,5 @@
 <h1 align="center">
-  <img src="assets/logo_hoi_detr.png" alt="HOI-DETR logo" height="36" align="absmiddle">
-  &nbsp;Improving and Evaluating Hand-Object Interaction Detection
+  Improving and Evaluating Hand-Object Interaction Detection
 </h1>
 
 <p align="center">
