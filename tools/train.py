@@ -6,6 +6,9 @@ import os.path as osp
 import time
 import warnings
 
+# Suppress all warnings (including timm FutureWarnings) before any imports
+warnings.filterwarnings('ignore')
+
 import mmcv
 import torch
 import torch.distributed as dist
@@ -211,19 +214,32 @@ def main():
     meta['seed'] = seed
     meta['exp_name'] = osp.basename(args.config)
 
+    logger.info('=' * 60)
+    logger.info('Building model...')
     model = build_detector(
         cfg.model,
         train_cfg=cfg.get('train_cfg'),
         test_cfg=cfg.get('test_cfg'))
     model.init_weights()
 
+    total_params = sum(p.numel() for p in model.parameters())
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    logger.info(f'Model: {cfg.model.type}')
+    logger.info(f'Total parameters:     {total_params:,}')
+    logger.info(f'Trainable parameters: {trainable_params:,}')
+    logger.info(f'Frozen parameters:    {total_params - trainable_params:,}')
+    logger.info('=' * 60)
+
+    logger.info('Building datasets...')
     datasets = [build_dataset(cfg.data.train)]
+    logger.info(f'Train dataset size: {len(datasets[0])} samples')
     if len(cfg.workflow) == 2:
         assert 'val' in [mode for (mode, _) in cfg.workflow]
         val_dataset = copy.deepcopy(cfg.data.val)
         val_dataset.pipeline = cfg.data.train.get(
             'pipeline', cfg.data.train.dataset.get('pipeline'))
         datasets.append(build_dataset(val_dataset))
+        logger.info(f'Val dataset size:   {len(datasets[1])} samples')
     if cfg.checkpoint_config is not None:
         # save mmdet version, config file content and class names in
         # checkpoints as meta data
@@ -232,8 +248,21 @@ def main():
             CLASSES=datasets[0].CLASSES)
     # add an attribute for visualization convenience
     model.CLASSES = datasets[0].CLASSES
-    
-    
+
+    # Log training schedule summary
+    logger.info('=' * 60)
+    logger.info('Training configuration summary:')
+    logger.info(f'  Work dir:      {cfg.work_dir}')
+    logger.info(f'  Max epochs:    {cfg.runner.max_epochs if hasattr(cfg.runner, "max_epochs") else cfg.total_epochs}')
+    train_loader_cfg = cfg.data.get('train_dataloader', {})
+    samples_per_gpu = train_loader_cfg.get('samples_per_gpu', cfg.data.get('samples_per_gpu', 2))
+    workers_per_gpu = train_loader_cfg.get('workers_per_gpu', cfg.data.get('workers_per_gpu', 2))
+    logger.info(f'  Batch size/GPU:{samples_per_gpu}')
+    logger.info(f'  Workers/GPU:   {workers_per_gpu}')
+    logger.info(f'  Device:        {cfg.device}')
+    logger.info(f'  Classes ({len(datasets[0].CLASSES)}):  {list(datasets[0].CLASSES)}')
+    logger.info('=' * 60)
+    logger.info('Starting training...')
 
     train_detector(
         model,

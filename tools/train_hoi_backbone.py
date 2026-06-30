@@ -135,7 +135,7 @@ def main():
         if not data_root.endswith('/'):
             data_root += '/'
         validate_data_root(data_root)
-        cfg_overrides.append(f'data_root={data_root}')
+        cfg_overrides.append(f'data_root="{data_root}"')
     else:
         default_data_root = read_default_data_root(config_path)
         if default_data_root and not Path(default_data_root).exists():

@@ -226,7 +226,7 @@ class CoDINOHeadWithInteraction(CoDeformDETRHead):
             outs.append(feat.reshape(bs, c, h, w))
         outs.append(self.downsample(outs[-1]))
 
-        hs = hs.permute(0, 2, 1, 3)
+        hs = hs.permute(0, 2, 1, 3).contiguous()
 
         if dn_label_query is not None and dn_label_query.size(1) == 0:
             # NOTE: If there is no target in the image, the parameters of
@@ -596,7 +596,7 @@ class CoDINOHeadWithInteraction(CoDeformDETRHead):
                     head_idx=head_idx
             )
 
-        hs = hs.permute(0, 2, 1, 3)
+        hs = hs.permute(0, 2, 1, 3).contiguous()
         outputs_classes = []
         outputs_coords = []
 

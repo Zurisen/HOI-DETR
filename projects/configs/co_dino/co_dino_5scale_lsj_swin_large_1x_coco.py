@@ -69,7 +69,7 @@ test_pipeline = [
             dict(type='Collect', keys=['img'])
         ])
 ]
-data_root = '/home/bris/bris456520/ehpc298/hands23_data/'
+data_root = 'data/hands23_data/'
 dataset_type = 'CocoDataset'
 data = dict(
     samples_per_gpu=1,
@@ -79,7 +79,7 @@ data = dict(
         dataset=dict(
             type=dataset_type,
             ann_file=data_root + 'annotations/train_h_first_second.json',
-            img_prefix='/home/bris/bris456520/ehpc298/hands23_data/allMergedBlur/',
+            img_prefix=data_root + 'allMergedBlur/',
             filter_empty_gt=False,
             pipeline=load_pipeline),
         pipeline=train_pipeline),

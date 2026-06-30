@@ -13,7 +13,7 @@ pretrained = None  # for the Swin backbone itself
 # ====== GLOBAL MODEL SETTINGS ======
 num_dec_layer = 6
 lambda_2 = 2.0
-data_root = '/home/s5a/ahmad.s5a/projects/hands23_data/'
+data_root = 'data/hands23_data/'
 
 # ====== MODEL DEFINITION ======
 model = dict(
@@ -377,13 +377,16 @@ data = dict(
     train=dict(
         filter_empty_gt=False,
         pipeline=train_pipeline,
-        ann_file=data_root + 'annotations/train_h_first_second_full_corrected_auto_80_100.json'),
+        ann_file=data_root + 'annotations/train_h_first_second_full_corrected_auto_80_100.json',
+        img_prefix=data_root + 'allMergedBlur/'),
     val=dict(
         pipeline=test_pipeline,
-        ann_file=data_root + 'annotations/val_h_first_second_full_corrected.json'),
+        ann_file=data_root + 'annotations/val_h_first_second_full_corrected.json',
+        img_prefix=data_root + 'allMergedBlur/'),
     test=dict(
         pipeline=test_pipeline,
-        ann_file=data_root + 'annotations/val_h_first_second_full_corrected.json')
+        ann_file=data_root + 'annotations/val_h_first_second_full_corrected.json',
+        img_prefix=data_root + 'allMergedBlur/')
 )
 
 evaluation = dict(metric='bbox')

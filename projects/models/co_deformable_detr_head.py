@@ -165,7 +165,7 @@ class CoDeformDETRHead(DETRHead):
             outs.append(feat.reshape(bs, c, h, w))
         outs.append(self.downsample(outs[-1]))
 
-        hs = hs.permute(0, 2, 1, 3)
+        hs = hs.permute(0, 2, 1, 3).contiguous()
         outputs_classes = []
         outputs_coords = []
 
@@ -255,7 +255,7 @@ class CoDeformDETRHead(DETRHead):
                     head_idx=head_idx
             )
 
-        hs = hs.permute(0, 2, 1, 3)
+        hs = hs.permute(0, 2, 1, 3).contiguous()
         outputs_classes = []
         outputs_coords = []
 

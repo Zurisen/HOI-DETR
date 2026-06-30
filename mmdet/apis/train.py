@@ -9,7 +9,7 @@ import numpy as np
 import torch
 import torch.distributed as dist
 from mmcv.runner import (DistSamplerSeedHook, EpochBasedRunner,
-                         Fp16OptimizerHook, OptimizerHook, build_runner,
+                         Fp16OptimizerHook, Hook, OptimizerHook, build_runner,
                          get_dist_info)
 
 from mmdet.core import DistEvalHook, EvalHook, build_optimizer
@@ -18,6 +18,37 @@ from mmdet.datasets import (build_dataloader, build_dataset,
 from mmdet.utils import (build_ddp, build_dp, compat_cfg,
                          find_latest_checkpoint, get_root_logger)
 from projects import *
+
+
+class CUDAPeakMemoryHook(Hook):
+    """Log peak CUDA memory per training epoch."""
+
+    def __init__(self):
+        super().__init__()
+        self.enabled = torch.cuda.is_available()
+
+    def before_train_epoch(self, runner):
+        if not self.enabled:
+            return
+        device = torch.cuda.current_device()
+        torch.cuda.reset_peak_memory_stats(device)
+
+    def after_train_epoch(self, runner):
+        if not self.enabled:
+            return
+
+        rank, _ = get_dist_info()
+        if rank != 0:
+            return
+
+        device = torch.cuda.current_device()
+        torch.cuda.synchronize(device)
+        peak_alloc_mb = torch.cuda.max_memory_allocated(device) / (1024 ** 2)
+        peak_reserved_mb = torch.cuda.max_memory_reserved(device) / (1024 ** 2)
+        runner.logger.info(
+            f'[VRAM][Epoch {runner.epoch + 1}] '
+            f'peak_allocated={peak_alloc_mb:.1f} MB, '
+            f'peak_reserved={peak_reserved_mb:.1f} MB')
 
 
 def init_random_seed(seed=None, device='cuda'):
@@ -204,6 +235,9 @@ def train_detector(model,
     if distributed:
         if isinstance(runner, EpochBasedRunner):
             runner.register_hook(DistSamplerSeedHook())
+
+    # Log per-epoch CUDA memory peaks for easier OOM debugging.
+    runner.register_hook(CUDAPeakMemoryHook(), priority='LOW')
 
     # register eval hooks
     if validate:

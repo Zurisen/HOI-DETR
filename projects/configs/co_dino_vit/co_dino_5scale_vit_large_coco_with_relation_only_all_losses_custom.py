@@ -25,7 +25,7 @@ residual_block_indexes = []
 
 num_dec_layer = 6
 lambda_2 = 0.0
-data_root = '/lus/lfs1aip2/projects/u6ev/ahmad/datasets/hands23_data/'
+data_root = 'data/hands23_data/'
 
 model = dict(
     type='CoDETR',
