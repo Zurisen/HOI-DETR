@@ -2,38 +2,43 @@ _base_ = [
     '../_base_/datasets/hands23_detection.py',
     '../_base_/default_runtime.py'
 ]
-
 checkpoint_config = dict(interval=1)
-
-pretrained = None
 load_from = None
+pretrained = None
+window_block_indexes = (
+    list(range(0, 1)) + list(range(2, 3)) + list(range(4, 5)) + list(range(6, 7)) + list(range(8, 9)) +
+    list(range(10, 11)))
+residual_block_indexes = []
 
 num_dec_layer = 6
-lambda_2 = 2.0
+lambda_2 = 0.0
 data_root = '/lus/lfs1aip2/projects/u6ev/ahmad/datasets/hands23_data/'
 
 model = dict(
     type='CoDETR',
     backbone=dict(
-        type='SwinTransformerV1',
-        embed_dim=96,
-        depths=[2, 2, 6, 2],
-        num_heads=[3, 6, 12, 24],
-        window_size=7,
-        ape=False,
-        drop_path_rate=0.2,
-        patch_norm=True,
-        out_indices=(0, 1, 2, 3),
-        use_checkpoint=False,
-        pretrained=pretrained),
-    neck=dict(
-        type='ChannelMapper',
-        in_channels=[96, 192, 384, 768],
-        kernel_size=1,
+        type='ViT',
+        img_size=640,
+        pretrain_img_size=224,
+        patch_size=16,
+        embed_dim=384,
+        depth=12,
+        num_heads=6,
+        mlp_ratio=4,
+        drop_path_rate=0.1,
+        window_size=12,
+        window_block_indexes=window_block_indexes,
+        residual_block_indexes=residual_block_indexes,
+        qkv_bias=True,
+        use_act_checkpoint=True,
+        init_cfg=None),
+    neck=dict(        
+        type='SFP',
+        in_channels=[384],        
         out_channels=256,
-        act_cfg=None,
-        norm_cfg=dict(type='GN', num_groups=32),
-        num_outs=5),
+        num_outs=5,
+        use_p2=True,
+        use_act_checkpoint=False),
     rpn_head=dict(
         type='RPNHead',
         in_channels=256,
@@ -49,14 +54,14 @@ model = dict(
             target_means=[.0, .0, .0, .0],
             target_stds=[1.0, 1.0, 1.0, 1.0]),
         loss_cls=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0 * num_dec_layer * lambda_2),
-        loss_bbox=dict(type='L1Loss', loss_weight=1.0 * num_dec_layer * lambda_2)),
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0*num_dec_layer*lambda_2),
+        loss_bbox=dict(type='L1Loss', loss_weight=1.0*num_dec_layer*lambda_2)),
     query_head=dict(
         type='CoDINOHeadWithInteraction',
         num_query=900,
         num_classes=3,
         num_feature_levels=5,
-        in_channels=768,
+        in_channels=384,
         sync_cls_avg_factor=True,
         as_two_stage=True,
         with_box_refine=True,
@@ -74,7 +79,7 @@ model = dict(
             encoder=dict(
                 type='DetrTransformerEncoder',
                 num_layers=6,
-                with_cp=4,
+                with_cp=6,
                 transformerlayers=dict(
                     type='BaseTransformerLayer',
                     attn_cfgs=dict(
@@ -121,7 +126,8 @@ model = dict(
             use_sigmoid=True,
             gamma=2.0,
             alpha=0.25,
-            loss_weight=3.0)),
+            loss_weight=3.0)
+        ),
     roi_head=[dict(
         type='CoStandardRoIHead',
         bbox_roi_extractor=dict(
@@ -131,20 +137,24 @@ model = dict(
             featmap_strides=[4, 8, 16, 32, 64],
             finest_scale=56),
         bbox_head=dict(
-            type='Shared2FCBBoxHead',
+            type='ConvFCBBoxHead',
+            num_shared_convs=4,
+            num_shared_fcs=1,
             in_channels=256,
+            conv_out_channels=256,
             fc_out_channels=1024,
             roi_feat_size=7,
             num_classes=3,
             bbox_coder=dict(
                 type='DeltaXYWHBBoxCoder',
                 target_means=[0., 0., 0., 0.],
-                target_stds=[0.1, 0.1, 0.2, 0.2]),
-            reg_class_agnostic=False,
+                target_stds=[0.05, 0.05, 0.1, 0.1]),
+            reg_class_agnostic=True,
             reg_decoded_bbox=True,
+            norm_cfg=dict(type='GN', num_groups=32),
             loss_cls=dict(
-                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0 * num_dec_layer * lambda_2),
-            loss_bbox=dict(type='GIoULoss', loss_weight=10.0 * num_dec_layer * lambda_2)))],
+                type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0*num_dec_layer*lambda_2),
+            loss_bbox=dict(type='GIoULoss', loss_weight=10.0*num_dec_layer*lambda_2)))],
     bbox_head=[dict(
         type='CoATSSHead',
         num_classes=3,
@@ -166,10 +176,10 @@ model = dict(
             use_sigmoid=True,
             gamma=2.0,
             alpha=0.25,
-            loss_weight=1.0 * num_dec_layer * lambda_2),
-        loss_bbox=dict(type='GIoULoss', loss_weight=2.0 * num_dec_layer * lambda_2),
+            loss_weight=1.0*num_dec_layer*lambda_2),
+        loss_bbox=dict(type='GIoULoss', loss_weight=2.0*num_dec_layer*lambda_2),
         loss_centerness=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0 * num_dec_layer * lambda_2))],
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0*num_dec_layer*lambda_2)),],
     train_cfg=[
         dict(
             assigner=dict(
@@ -220,7 +230,7 @@ model = dict(
             assigner=dict(type='ATSSAssigner', topk=9),
             allowed_border=-1,
             pos_weight=-1,
-            debug=False)],
+            debug=False),],
     test_cfg=[
         dict(
             max_per_img=1000,
@@ -241,12 +251,11 @@ model = dict(
             min_bbox_size=0,
             score_thr=0.0,
             nms=dict(type='soft_nms', iou_threshold=0.6),
-            max_per_img=100)])
+            max_per_img=100),
+    ])
 
 img_norm_cfg = dict(
-    mean=[123.675, 116.28, 103.53],
-    std=[58.395, 57.12, 57.375],
-    to_rgb=True)
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 
 train_pipeline = [
     dict(type='LoadImageFromFile'),
@@ -287,7 +296,8 @@ train_pipeline = [
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundleWithHand'),
-    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels', 'gt_handside', 'gt_interaction'])
+    dict(type='Collect',
+         keys=['img', 'gt_bboxes', 'gt_labels', 'gt_handside', 'gt_interaction'])
 ]
 
 test_pipeline = [
@@ -338,15 +348,14 @@ runner = dict(type='EpochBasedRunner', max_epochs=5)
 optimizer_config = dict(grad_clip=dict(max_norm=0.1, norm_type=2))
 optimizer = dict(
     type='AdamW',
-    lr=5e-5,
+    lr=1e-4,
     weight_decay=0.01,
     constructor='LayerDecayOptimizerConstructor',
     paramwise_cfg=dict(
-        num_layers=24,
-        layer_decay_rate=0.8))
+        num_layers=12, layer_decay_rate=0.8))
 
 custom_hooks = [
     dict(
         type='ExpMomentumEMAHook',
         momentum=0.0001,
-        priority=49)]
+        priority=49),]

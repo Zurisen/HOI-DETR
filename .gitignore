@@ -1,5 +1,8 @@
 .DS_Store
 *venv
 *.log
-
+*.zip
+*.jpg
 *__pycache__/
+datasets/
+annotations/

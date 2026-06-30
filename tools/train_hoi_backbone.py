@@ -8,13 +8,15 @@ from pathlib import Path
 
 
 BACKBONE_CONFIGS = {
+    'vit_small': 'projects/configs/co_dino_vit/co_dino_5scale_vit_small_coco_with_relation_only_all_losses_custom.py',
     'swin_tiny': 'projects/configs/co_dino_swin/co_dino_5scale_swin_tiny_coco_with_relation_only_all_losses_custom.py',
     'swin_small': 'projects/configs/co_dino_swin/co_dino_5scale_swin_small_coco_with_relation_only_all_losses_custom.py',
     'resnet50': 'projects/configs/co_dino_swin/co_dino_5scale_r50_coco_with_relation_only_all_losses_custom.py',
 }
 
-EXPECTED_ANNOTATIONS = [
-    'annotations/train_h_first_second_full_corrected_auto_80_100.json',
+TRAIN_ANNOTATION = 'annotations/train_h_first_second_full_corrected_auto_80_100.json'
+VAL_ANNOTATION_CANDIDATES = [
+    'annotations/val_h_first_second_full_corrected_w_area.json',
     'annotations/val_h_first_second_full_10.json',
 ]
 
@@ -93,9 +95,16 @@ def validate_data_root(data_root):
             f'Dataset root not found: {root}. '
             'Download Hands23 locally and pass --data-root to this script.')
 
-    missing = [rel for rel in EXPECTED_ANNOTATIONS if not (root / rel).exists()]
+    missing = []
+    if not (root / TRAIN_ANNOTATION).exists():
+        missing.append(TRAIN_ANNOTATION)
+
+    has_val = any((root / rel).exists() for rel in VAL_ANNOTATION_CANDIDATES)
+    if not has_val:
+        missing.append('one of: ' + ', '.join(VAL_ANNOTATION_CANDIDATES))
+
     if missing:
-        pretty_missing = ', '.join(missing)
+        pretty_missing = '; '.join(missing)
         raise SystemExit(
             f'Dataset root exists but required annotation files are missing under {root}: '
             f'{pretty_missing}.')
