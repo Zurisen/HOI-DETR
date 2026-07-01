@@ -2,7 +2,7 @@ _base_ = [
     '../_base_/datasets/hands23_detection.py',
     '../_base_/default_runtime.py'
 ]
-checkpoint_config = dict(interval=100, by_epoch=False, max_keep_ckpts=3)
+checkpoint_config = dict(interval=1, by_epoch=True, max_keep_ckpts=5)
 load_from = None
 pretrained = None
 window_block_indexes = (

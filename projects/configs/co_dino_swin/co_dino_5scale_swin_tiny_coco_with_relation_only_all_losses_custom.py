@@ -3,7 +3,7 @@ _base_ = [
     '../_base_/default_runtime.py'
 ]
 
-checkpoint_config = dict(interval=100, by_epoch=False, max_keep_ckpts=3)
+checkpoint_config = dict(interval=1, by_epoch=True, max_keep_ckpts=5)
 
 pretrained = None
 load_from = None
