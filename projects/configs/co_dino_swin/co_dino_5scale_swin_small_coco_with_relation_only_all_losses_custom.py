@@ -6,6 +6,7 @@ pretrained = None
 
 model = dict(
     backbone=dict(
+        type='Swin',
         embed_dim=96,
         depths=[2, 2, 18, 2],
         num_heads=[3, 6, 12, 24],
