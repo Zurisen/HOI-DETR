@@ -317,8 +317,8 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=8,
-    workers_per_gpu=8,
+    samples_per_gpu=4,
+    workers_per_gpu=4,
     collate_fn=dict(type='custom_collate'),
     train=dict(
         filter_empty_gt=False,
